@@ -1,0 +1,279 @@
+/**
+ * primeNumber DATA SUMMIT 2025
+ * Supabase連携用のサービス
+ */
+
+import supabase from './supabaseClient';
+
+/**
+ * ダウンロード関連のAPI
+ */
+export const downloadService = {
+  // すべてのダウンロードアイテムを取得
+  getAllItems: async () => {
+    const { data, error } = await supabase
+      .from('downloads')
+      .select('*')
+      .order('category', { ascending: true });
+      
+    if (error) {
+      console.error('Error fetching downloads:', error);
+      throw error;
+    }
+    
+    return data || [];
+  },
+  
+  // 特定のカテゴリーのダウンロードアイテムを取得
+  getItemsByCategory: async (category) => {
+    const { data, error } = await supabase
+      .from('downloads')
+      .select('*')
+      .eq('category', category);
+      
+    if (error) {
+      console.error('Error fetching downloads by category:', error);
+      throw error;
+    }
+    
+    return data || [];
+  },
+  
+  // 新しいダウンロードアイテムを作成
+  createItem: async (item) => {
+    const { data, error } = await supabase
+      .from('downloads')
+      .insert([item])
+      .select();
+      
+    if (error) {
+      console.error('Error creating download item:', error);
+      throw error;
+    }
+    
+    return data?.[0] || {};
+  },
+  
+  // ダウンロードアイテムを更新
+  updateItem: async (id, item) => {
+    const { data, error } = await supabase
+      .from('downloads')
+      .update(item)
+      .eq('id', id)
+      .select();
+      
+    if (error) {
+      console.error('Error updating download item:', error);
+      throw error;
+    }
+    
+    return data?.[0] || {};
+  },
+  
+  // ダウンロードアイテムを削除
+  deleteItem: async (id) => {
+    const { error } = await supabase
+      .from('downloads')
+      .delete()
+      .eq('id', id);
+      
+    if (error) {
+      console.error('Error deleting download item:', error);
+      throw error;
+    }
+    
+    return { success: true };
+  }
+};
+
+/**
+ * FAQ関連のAPI
+ */
+export const faqService = {
+  // すべてのFAQを取得
+  getAllFaqs: async () => {
+    const { data, error } = await supabase
+      .from('faqs')
+      .select('*')
+      .order('priority', { ascending: true });
+      
+    if (error) {
+      console.error('Error fetching FAQs:', error);
+      throw error;
+    }
+    
+    return data || [];
+  },
+  
+  // 特定のカテゴリーのFAQを取得
+  getFaqsByCategory: async (category) => {
+    const { data, error } = await supabase
+      .from('faqs')
+      .select('*')
+      .eq('category', category)
+      .order('priority', { ascending: true });
+      
+    if (error) {
+      console.error('Error fetching FAQs by category:', error);
+      throw error;
+    }
+    
+    return data || [];
+  },
+  
+  // キーワードでFAQを検索
+  searchFaqs: async (keyword) => {
+    // PostgreSQLの全文検索を使用
+    const { data, error } = await supabase
+      .from('faqs')
+      .select('*')
+      .or(`question.ilike.%${keyword}%,answer.ilike.%${keyword}%`)
+      .order('priority', { ascending: true });
+      
+    if (error) {
+      console.error('Error searching FAQs:', error);
+      throw error;
+    }
+    
+    return data || [];
+  },
+  
+  // 新しいFAQを作成
+  createFaq: async (faq) => {
+    const { data, error } = await supabase
+      .from('faqs')
+      .insert([faq])
+      .select();
+      
+    if (error) {
+      console.error('Error creating FAQ:', error);
+      throw error;
+    }
+    
+    return data?.[0] || {};
+  },
+  
+  // FAQを更新
+  updateFaq: async (id, faq) => {
+    const { data, error } = await supabase
+      .from('faqs')
+      .update(faq)
+      .eq('id', id)
+      .select();
+      
+    if (error) {
+      console.error('Error updating FAQ:', error);
+      throw error;
+    }
+    
+    return data?.[0] || {};
+  },
+  
+  // FAQを削除
+  deleteFaq: async (id) => {
+    const { error } = await supabase
+      .from('faqs')
+      .delete()
+      .eq('id', id);
+      
+    if (error) {
+      console.error('Error deleting FAQ:', error);
+      throw error;
+    }
+    
+    return { success: true };
+  }
+};
+
+/**
+ * ユーザー認証関連のAPI
+ */
+export const authService = {
+  // ログイン
+  login: async (username, password) => {
+    // 管理画面用のシンプルな認証
+    if (username === 'admin' && password === 'PrimeData_Admin!2025') {
+      const token = 'admin-auth-token';
+      localStorage.setItem('authToken', token);
+      return {token, user: {username, role: 'admin'}};
+    }
+    throw new Error('Invalid credentials');
+  },
+  
+  // ログアウト
+  logout: () => {
+    localStorage.removeItem('authToken');
+  },
+  
+  // 認証状態を確認
+  isAuthenticated: () => {
+    return !!localStorage.getItem('authToken');
+  }
+};
+
+/**
+ * テキストデータをSupabaseに移行するユーティリティ
+ * @param {string} faqText - FAQテキスト
+ * @returns {Promise<Object>} 移行結果
+ */
+export const migrateFaqTextToSupabase = async (faqText) => {
+  try {
+    // Q&Aを抽出
+    const qaRegex = /Q: (.+?)[\r\n]+A: (.+?)(?=[\r\n]+Q:|$)/gs;
+    const faqItems = [];
+    let match;
+    
+    while ((match = qaRegex.exec(faqText)) !== null) {
+      // カテゴリーを推測（セクション見出しから）
+      let category = 'general';
+      const sectionMatch = faqText.substring(0, match.index).match(/## ([^\n]+)(?![\s\S]*## \1)/);
+      
+      if (sectionMatch) {
+        const sectionTitle = sectionMatch[1].trim().toLowerCase();
+        
+        // セクションタイトルからカテゴリーIDを推測
+        if (sectionTitle.includes('基本情報')) category = 'general';
+        else if (sectionTitle.includes('会場')) category = 'venue';
+        else if (sectionTitle.includes('登録') || sectionTitle.includes('参加者')) category = 'registration';
+        else if (sectionTitle.includes('スポンサー') || sectionTitle.includes('出展')) category = 'sponsor';
+        else if (sectionTitle.includes('登壇者')) category = 'speaker';
+      }
+      
+      // IDを生成
+      const id = match[1].trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '')
+        .replace(/\s+/g, '-')
+        .substring(0, 30);
+      
+      faqItems.push({
+        id,
+        question: match[1].trim(),
+        answer: match[2].trim(),
+        category,
+        priority: 5 // デフォルト優先度
+      });
+    }
+    
+    // 既存のFAQをクリア
+    await supabase.from('faqs').delete().neq('id', 'dummy');
+    
+    // 新しいFAQを挿入
+    if (faqItems.length > 0) {
+      const { error } = await supabase.from('faqs').insert(faqItems);
+      
+      if (error) {
+        console.error('Error migrating FAQs:', error);
+        return { success: false, message: error.message };
+      }
+    }
+    
+    return { 
+      success: true, 
+      message: `${faqItems.length}件のFAQをSupabaseに移行しました。` 
+    };
+  } catch (error) {
+    console.error('Error in migration:', error);
+    return { success: false, message: error.message };
+  }
+};

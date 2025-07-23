@@ -1,0 +1,525 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { submitToGoogleSheets, checkSignInStatus, signIn } from '../../utils/googleSheetsService';
+import {
+  FormContainer,
+  FormTitle,
+  FormDescription,
+  FormGroup,
+  FormLabel,
+  RequiredMark,
+  FormInput,
+  FormTextarea,
+  FormSelect,
+  SubmitButton,
+  ErrorMessage,
+  HelpText,
+  FormSection,
+  SectionTitle,
+  TwoColumnLayout,
+  FileUploadArea,
+  FileInput,
+  FileInputLabel,
+  FileUploadIcon,
+  FileInfo,
+  DeleteButton,
+  SuccessMessage
+} from '../../components/FormComponents';
+
+const SessionForm = () => {
+  const [formData, setFormData] = useState({
+    sessionTitle: '',
+    sessionType: '',
+    sessionTrack: '',
+    sessionLevel: '',
+    sessionSummary: '',
+    sessionDetail: '',
+    sessionGoals: '',
+    sessionKeywords: '',
+    speakerName: '',
+    speakerTitle: '',
+    speakerCompany: '',
+    speakerBio: '',
+    speakerEmail: '',
+    speakerPhone: '',
+    coSpeakers: '',
+    presentationFile: null,
+    speakerPhoto: null,
+    specialRequests: ''
+  });
+  
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+    
+    // エラーをクリア
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: null
+      });
+    }
+  };
+  
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      setFormData({
+        ...formData,
+        [name]: files[0]
+      });
+      
+      // エラーをクリア
+      if (errors[name]) {
+        setErrors({
+          ...errors,
+          [name]: null
+        });
+      }
+    }
+  };
+  
+  const removeFile = (fieldName) => {
+    setFormData({
+      ...formData,
+      [fieldName]: null
+    });
+  };
+  
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // 必須フィールドの検証
+    if (!formData.sessionTitle.trim()) {
+      newErrors.sessionTitle = 'セッションタイトルは必須です';
+    }
+    
+    if (!formData.sessionType) {
+      newErrors.sessionType = 'セッションタイプは必須です';
+    }
+    
+    if (!formData.sessionTrack) {
+      newErrors.sessionTrack = 'セッショントラックは必須です';
+    }
+    
+    if (!formData.sessionSummary.trim()) {
+      newErrors.sessionSummary = 'セッション概要は必須です';
+    } else if (formData.sessionSummary.length > 300) {
+      newErrors.sessionSummary = '300文字以内で入力してください';
+    }
+    
+    if (!formData.speakerName.trim()) {
+      newErrors.speakerName = '講演者名は必須です';
+    }
+    
+    if (!formData.speakerCompany.trim()) {
+      newErrors.speakerCompany = '会社/組織名は必須です';
+    }
+    
+    if (!formData.speakerEmail.trim()) {
+      newErrors.speakerEmail = 'メールアドレスは必須です';
+    } else if (!/\S+@\S+\.\S+/.test(formData.speakerEmail)) {
+      newErrors.speakerEmail = '有効なメールアドレスを入力してください';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+  // Googleログイン状態を確認する関数
+  const checkAndSignIn = async () => {
+    try {
+      const isSignedIn = await checkSignInStatus();
+      if (!isSignedIn) {
+        await signIn();
+        return true;
+      }
+      return isSignedIn;
+    } catch (error) {
+      console.error('Error checking sign-in status:', error);
+      return false;
+    }
+  };
+
+  // ページ読み込み時にGoogleログイン状態を確認
+  useEffect(() => {
+    checkAndSignIn();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (validateForm()) {
+      try {
+        // Googleにログインしているか確認
+        const isSignedIn = await checkAndSignIn();
+        
+        if (isSignedIn) {
+          // Google Sheetsにデータを送信
+          await submitToGoogleSheets('session', formData);
+          console.log('Form data submitted to Google Sheets:', formData);
+          
+          // 送信成功
+          setSubmitted(true);
+          
+          // フォームをリセット
+          setFormData({
+            sessionTitle: '',
+            sessionType: '',
+            sessionTrack: '',
+            sessionLevel: '',
+            sessionSummary: '',
+            sessionDetail: '',
+            sessionGoals: '',
+            sessionKeywords: '',
+            speakerName: '',
+            speakerTitle: '',
+            speakerCompany: '',
+            speakerBio: '',
+            speakerEmail: '',
+            speakerPhone: '',
+            coSpeakers: '',
+            presentationFile: null,
+            speakerPhoto: null,
+            specialRequests: ''
+          });
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
+        sessionTitle: '',
+        sessionType: '',
+        sessionTrack: '',
+        sessionLevel: '',
+        sessionSummary: '',
+        sessionDetail: '',
+        sessionGoals: '',
+        sessionKeywords: '',
+        speakerName: '',
+        speakerTitle: '',
+        speakerCompany: '',
+        speakerBio: '',
+        speakerEmail: '',
+        speakerPhone: '',
+        coSpeakers: '',
+        presentationFile: null,
+        speakerPhoto: null,
+        specialRequests: ''
+      });
+    } else {
+      // エラーがある場合は最初のエラー要素にスクロール
+      const firstError = Object.keys(errors)[0];
+      if (firstError) {
+        const errorElement = document.querySelector(`[name="${firstError}"]`);
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }
+  };
+  
+  if (submitted) {
+    return (
+      <FormContainer>
+        <SuccessMessage>
+          <h3>セッション情報が送信されました</h3>
+          <p>ご提出ありがとうございます。内容を確認し、後ほどメールでご連絡いたします。</p>
+        </SuccessMessage>
+        <Link to="/forms" style={{ display: 'block', textAlign: 'center', marginTop: '2rem' }}>
+          フォーム一覧に戻る
+        </Link>
+      </FormContainer>
+    );
+  }
+  
+  return (
+    <FormContainer>
+      <FormTitle>セッション情報フォーム</FormTitle>
+      <FormDescription>
+        講演内容、セッションタイトル、概要などの情報を登録してください。
+        <br />
+        <strong>※</strong> マークの項目は必須です。
+      </FormDescription>
+      
+      <form onSubmit={handleSubmit}>
+        <FormSection>
+          <SectionTitle>セッション情報</SectionTitle>
+          
+          <FormGroup>
+            <FormLabel>セッションタイトル<RequiredMark>※</RequiredMark></FormLabel>
+            <FormInput
+              type="text"
+              name="sessionTitle"
+              value={formData.sessionTitle}
+              onChange={handleChange}
+              placeholder="例：データ活用で実現する業務効率化の実践例"
+            />
+            {errors.sessionTitle && <ErrorMessage>{errors.sessionTitle}</ErrorMessage>}
+          </FormGroup>
+          
+          <TwoColumnLayout>
+            <FormGroup>
+              <FormLabel>セッションタイプ<RequiredMark>※</RequiredMark></FormLabel>
+              <FormSelect
+                name="sessionType"
+                value={formData.sessionType}
+                onChange={handleChange}
+              >
+                <option value="">選択してください</option>
+                <option value="presentation">プレゼンテーション (30分)</option>
+                <option value="workshop">ワークショップ (60分)</option>
+                <option value="panel">パネルディスカッション (45分)</option>
+                <option value="keynote">基調講演 (45分)</option>
+                <option value="lightning">ライトニングトーク (10分)</option>
+              </FormSelect>
+              {errors.sessionType && <ErrorMessage>{errors.sessionType}</ErrorMessage>}
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel>セッショントラック<RequiredMark>※</RequiredMark></FormLabel>
+              <FormSelect
+                name="sessionTrack"
+                value={formData.sessionTrack}
+                onChange={handleChange}
+              >
+                <option value="">選択してください</option>
+                <option value="business">ビジネス活用トラック</option>
+                <option value="technical">テクニカルトラック</option>
+                <option value="case_study">事例紹介トラック</option>
+                <option value="future">未来技術トラック</option>
+                <option value="management">マネジメントトラック</option>
+              </FormSelect>
+              {errors.sessionTrack && <ErrorMessage>{errors.sessionTrack}</ErrorMessage>}
+            </FormGroup>
+          </TwoColumnLayout>
+          
+          <FormGroup>
+            <FormLabel>対象レベル</FormLabel>
+            <FormSelect
+              name="sessionLevel"
+              value={formData.sessionLevel}
+              onChange={handleChange}
+            >
+              <option value="">選択してください</option>
+              <option value="beginner">初級（基礎知識）</option>
+              <option value="intermediate">中級（実務経験者向け）</option>
+              <option value="advanced">上級（専門家向け）</option>
+              <option value="all">全レベル</option>
+            </FormSelect>
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel>セッション概要<RequiredMark>※</RequiredMark></FormLabel>
+            <FormTextarea
+              name="sessionSummary"
+              value={formData.sessionSummary}
+              onChange={handleChange}
+              placeholder="セッションの概要を300文字以内で入力してください。プログラムやウェブサイトに掲載されます。"
+            />
+            {errors.sessionSummary && <ErrorMessage>{errors.sessionSummary}</ErrorMessage>}
+            <HelpText>残り{300 - formData.sessionSummary.length}文字</HelpText>
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel>セッション詳細</FormLabel>
+            <FormTextarea
+              name="sessionDetail"
+              value={formData.sessionDetail}
+              onChange={handleChange}
+              placeholder="セッションの詳細な内容を入力してください。審査用の情報となります。"
+            />
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel>セッションのゴール</FormLabel>
+            <FormTextarea
+              name="sessionGoals"
+              value={formData.sessionGoals}
+              onChange={handleChange}
+              placeholder="参加者がこのセッションから得られる知識や学びを箇条書きで入力してください。"
+            />
+            <HelpText>参加者がセッションから何を学び、どのような知識を得られるかを記載してください。</HelpText>
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel>キーワード</FormLabel>
+            <FormInput
+              type="text"
+              name="sessionKeywords"
+              value={formData.sessionKeywords}
+              onChange={handleChange}
+              placeholder="例：データ分析, 業務効率化, AI活用（カンマ区切りで入力）"
+            />
+            <HelpText>セッションに関連するキーワードをカンマ区切りで入力してください。</HelpText>
+          </FormGroup>
+        </FormSection>
+        
+        <FormSection>
+          <SectionTitle>講演者情報</SectionTitle>
+          
+          <TwoColumnLayout>
+            <FormGroup>
+              <FormLabel>講演者名<RequiredMark>※</RequiredMark></FormLabel>
+              <FormInput
+                type="text"
+                name="speakerName"
+                value={formData.speakerName}
+                onChange={handleChange}
+                placeholder="例：山田 太郎"
+              />
+              {errors.speakerName && <ErrorMessage>{errors.speakerName}</ErrorMessage>}
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel>役職</FormLabel>
+              <FormInput
+                type="text"
+                name="speakerTitle"
+                value={formData.speakerTitle}
+                onChange={handleChange}
+                placeholder="例：最高技術責任者（CTO）"
+              />
+            </FormGroup>
+          </TwoColumnLayout>
+          
+          <FormGroup>
+            <FormLabel>会社/組織名<RequiredMark>※</RequiredMark></FormLabel>
+            <FormInput
+              type="text"
+              name="speakerCompany"
+              value={formData.speakerCompany}
+              onChange={handleChange}
+              placeholder="例：株式会社サンプル"
+            />
+            {errors.speakerCompany && <ErrorMessage>{errors.speakerCompany}</ErrorMessage>}
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel>講演者プロフィール</FormLabel>
+            <FormTextarea
+              name="speakerBio"
+              value={formData.speakerBio}
+              onChange={handleChange}
+              placeholder="講演者の経歴や専門分野などを200文字程度で入力してください。"
+            />
+            <HelpText>ウェブサイトやプログラムに掲載されます。</HelpText>
+          </FormGroup>
+          
+          <TwoColumnLayout>
+            <FormGroup>
+              <FormLabel>メールアドレス<RequiredMark>※</RequiredMark></FormLabel>
+              <FormInput
+                type="email"
+                name="speakerEmail"
+                value={formData.speakerEmail}
+                onChange={handleChange}
+                placeholder="例：sample@example.com"
+              />
+              {errors.speakerEmail && <ErrorMessage>{errors.speakerEmail}</ErrorMessage>}
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel>電話番号</FormLabel>
+              <FormInput
+                type="tel"
+                name="speakerPhone"
+                value={formData.speakerPhone}
+                onChange={handleChange}
+                placeholder="例：03-1234-5678"
+              />
+            </FormGroup>
+          </TwoColumnLayout>
+          
+          <FormGroup>
+            <FormLabel>共同講演者</FormLabel>
+            <FormTextarea
+              name="coSpeakers"
+              value={formData.coSpeakers}
+              onChange={handleChange}
+              placeholder="共同講演者がいる場合は、氏名、役職、会社/組織名を入力してください。複数の場合は改行で区切ってください。"
+            />
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel>講演者写真</FormLabel>
+            <FileUploadArea>
+              <FileInput
+                type="file"
+                id="speakerPhoto"
+                name="speakerPhoto"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              <FileInputLabel htmlFor="speakerPhoto">
+                <FileUploadIcon>📷</FileUploadIcon>
+                <p>クリックして写真をアップロード</p>
+                <p style={{ fontSize: '0.8rem', color: '#666' }}>JPG、PNG形式（推奨サイズ：300x300px以上）</p>
+              </FileInputLabel>
+            </FileUploadArea>
+            {formData.speakerPhoto && (
+              <FileInfo>
+                <span>{formData.speakerPhoto.name}</span>
+                <DeleteButton type="button" onClick={() => removeFile('speakerPhoto')}>
+                  ✕
+                </DeleteButton>
+              </FileInfo>
+            )}
+          </FormGroup>
+        </FormSection>
+        
+        <FormSection>
+          <SectionTitle>プレゼンテーション資料</SectionTitle>
+          
+          <FormGroup>
+            <FormLabel>プレゼンテーションファイル</FormLabel>
+            <FileUploadArea>
+              <FileInput
+                type="file"
+                id="presentationFile"
+                name="presentationFile"
+                accept=".pdf,.ppt,.pptx"
+                onChange={handleFileChange}
+              />
+              <FileInputLabel htmlFor="presentationFile">
+                <FileUploadIcon>📄</FileUploadIcon>
+                <p>クリックしてファイルをアップロード</p>
+                <p style={{ fontSize: '0.8rem', color: '#666' }}>PDF、PowerPoint形式（最大20MB）</p>
+              </FileInputLabel>
+            </FileUploadArea>
+            {formData.presentationFile && (
+              <FileInfo>
+                <span>{formData.presentationFile.name}</span>
+                <DeleteButton type="button" onClick={() => removeFile('presentationFile')}>
+                  ✕
+                </DeleteButton>
+              </FileInfo>
+            )}
+            <HelpText>
+              プレゼンテーション資料は後日提出も可能です。締切は2025年6月1日です。
+            </HelpText>
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel>特別な要望</FormLabel>
+            <FormTextarea
+              name="specialRequests"
+              value={formData.specialRequests}
+              onChange={handleChange}
+              placeholder="講演に関する特別な要望があれば入力してください。"
+            />
+          </FormGroup>
+        </FormSection>
+        
+        <SubmitButton type="submit">送信する</SubmitButton>
+      </form>
+    </FormContainer>
+  );
+};
+
+export default SessionForm;

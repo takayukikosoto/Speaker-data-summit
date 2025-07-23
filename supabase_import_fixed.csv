@@ -1,0 +1,9 @@
+id,category,title,description,fileType,fileSize,downloadUrl,lastUpdated,created_at
+d1a2b3c4-e5f6-4890-abcd-ef1234567890,sponsor,スポンサーガイド,スポンサー出展に関する詳細情報と注意事項が記載されています。料金プラン、特典内容、申込方法などをご確認いただけます。,PDF,2.4MB,https://app.box.com/s/e347i97wzpqqzhbgr4jwo7mqsyqkftai,2025-04-15,2025-04-15 09:00:00
+e2b3c4d5-f6a7-4901-bcde-ef2345678901,sponsor,ブース設営マニュアル,展示ブースの設営・撤去に関するガイドラインです。搬入出スケジュール、電源・ネットワーク情報、禁止事項などが記載されています。,PDF,3.1MB,https://drive.google.com/file/d/yyyy/view,2025-05-10,2025-05-10 10:30:00
+f3c4d5e6-a7b8-4012-cdef-ab3456789012,branding,ロゴパッケージ,高解像度ロゴとブランドガイドラインが含まれています。プロモーション資料作成時にご利用ください。,ZIP,15.2MB,https://drive.google.com/file/d/zzzz/view,2025-04-20,2025-04-20 14:15:00
+a4d5e6f7-b8c9-4123-defg-bc4567890123,speaker,プレゼンテーションテンプレート,登壇者用のPowerPointテンプレートです。このテンプレートを使用して発表資料を作成してください。,PPTX,1.8MB,https://drive.google.com/file/d/aaaa/view,2025-05-05,2025-05-05 11:45:00
+b5e6f7a8-c9d0-4234-efgh-cd5678901234,speaker,セッションガイドライン,講演時間、Q&A対応、資料提出期限など、登壇者が知っておくべき重要事項をまとめています。,PDF,1.2MB,https://drive.google.com/file/d/bbbb/view,2025-05-12,2025-05-12 16:20:00
+c6f7a8b9-d0e1-4345-fghi-de6789012345,general,会場フロアマップ,高輪ゲートウェイコンベンションセンター 4階の詳細なフロアマップです。ブース配置、セッション会場、休憩エリアなどをご確認いただけます。,PDF,4.5MB,https://drive.google.com/file/d/cccc/view,2025-05-20,2025-05-20 08:50:00
+d7a8b9c0-e1f2-4456-ghij-ef7890123456,press,プレスキット,メディア関係者向けの資料パッケージです。イベント概要、出展企業リスト、注目セッション情報などが含まれています。,ZIP,8.7MB,https://drive.google.com/file/d/dddd/view,2025-05-15,2025-05-15 13:10:00
+e8a9b0c1-f2d3-4567-hijk-fa8901234567,general,Wi-Fi接続ガイド,会場内のWi-Fi接続方法と注意事項です。セッション発表者、ブース出展者向けの専用ネットワーク情報も含まれています。,PDF,0.8MB,https://drive.google.com/file/d/eeee/view,2025-05-22,2025-05-22 15:30:00

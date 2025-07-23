@@ -1,0 +1,101 @@
+{
+  "categories": [
+    {
+      "id": "general",
+      "name": "一般情報",
+      "description": "イベント全般に関する質問"
+    },
+    {
+      "id": "registration",
+      "name": "参加登録",
+      "description": "参加登録に関する質問"
+    },
+    {
+      "id": "venue",
+      "name": "会場・アクセス",
+      "description": "会場やアクセスに関する質問"
+    },
+    {
+      "id": "sponsor",
+      "name": "スポンサー・出展",
+      "description": "スポンサーや出展に関する質問"
+    },
+    {
+      "id": "speaker",
+      "name": "登壇者",
+      "description": "登壇者向けの質問"
+    }
+  ],
+  "items": [
+    {
+      "id": "event-date",
+      "category": "general",
+      "question": "イベントの開催日時を教えてください",
+      "answer": "産業DXカンファレンス2025は、2025年7月15日（火）〜16日（水）の2日間開催されます。開場時間は両日とも9:00、セッション開始は10:00からとなります。",
+      "priority": 1
+    },
+    {
+      "id": "venue-access",
+      "category": "venue",
+      "question": "会場へのアクセス方法を教えてください",
+      "answer": "高輪ゲートウェイコンベンションセンター 4階は、JR山手線・京浜東北線「高輪ゲートウェイ駅」直結です。東京駅から約8分、品川駅から約3分でアクセスできます。",
+      "priority": 1
+    },
+    {
+      "id": "registration-fee",
+      "category": "registration",
+      "question": "参加費はいくらですか",
+      "answer": "一般参加は15,000円（税込）、早期割引（5月末まで）は12,000円（税込）です。学生は5,000円（要学生証）となっています。",
+      "priority": 2
+    },
+    {
+      "id": "cancellation-policy",
+      "category": "registration",
+      "question": "キャンセルポリシーについて教えてください",
+      "answer": "開催2週間前までのキャンセルは全額返金、1週間前までは50%返金、それ以降はキャンセル料100%となります。参加者の変更は無料で承ります。",
+      "priority": 3
+    },
+    {
+      "id": "wifi",
+      "category": "venue",
+      "question": "Wi-Fi環境はありますか",
+      "answer": "はい、会場内では無料のWi-Fiをご利用いただけます。接続情報は当日会場でご案内します。また、出展者・登壇者向けの専用ネットワークもご用意しています。",
+      "priority": 2
+    },
+    {
+      "id": "lunch",
+      "category": "general",
+      "question": "ランチは提供されますか",
+      "answer": "はい、参加費にはランチボックスが含まれています。事前アンケートで食事の制限やアレルギーについてお知らせください。",
+      "priority": 3
+    },
+    {
+      "id": "recording",
+      "category": "general",
+      "question": "セッションの録画・撮影はできますか",
+      "answer": "セッションの個人的な録画・撮影はご遠慮ください。主催者側で録画したコンテンツは、後日参加者限定で公開予定です。",
+      "priority": 4
+    },
+    {
+      "id": "sponsorship",
+      "category": "sponsor",
+      "question": "スポンサーシップについて詳細を知りたいです",
+      "answer": "スポンサープランには、プラチナ、ゴールド、シルバーの3種類があります。詳細は「スポンサーガイド」をダウンロードいただくか、sponsor@industry-dx-conference.jpまでお問い合わせください。",
+      "priority": 1
+    },
+    {
+      "id": "speaker-submission",
+      "category": "speaker",
+      "question": "講演資料の提出期限はいつですか",
+      "answer": "講演資料の提出期限は、イベント開催の2週間前（2025年7月1日）までとなっています。期限までにご提出いただけない場合は、運営事務局までご連絡ください。",
+      "priority": 1
+    },
+    {
+      "id": "speaker-equipment",
+      "category": "speaker",
+      "question": "講演で使用できる機材について教えてください",
+      "answer": "各セッション会場には、プロジェクター、スクリーン、マイク、レーザーポインターが標準で設置されています。特殊な機材が必要な場合は、事前に運営事務局までご相談ください。",
+      "priority": 2
+    }
+  ]
+}
