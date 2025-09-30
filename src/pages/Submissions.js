@@ -194,13 +194,13 @@ const Submissions = () => {
             // 講演情報フォーム提出の場合は特定のURLを使用
             if (rowData['提出物'] === '講演情報フォーム提出') {
               return (
-                <a href="https://docs.google.com/forms/d/1Vd91yYmuQ9Vh7sWBWrZJ6ZN-MY1NFJWAYsafknVcoHo/preview" target="_blank" rel="noopener noreferrer">
+                <a href="https://forms.gle/LGSpB4NPXugy7LLE6" target="_blank" rel="noopener noreferrer">
                   フォームはこちら <FaExternalLinkAlt />
                 </a>
               );
             } else {
               return (
-                <a href="https://forms.gle/q9WWDok1nXCkmG5c9" target="_blank" rel="noopener noreferrer">
+                <a href="https://forms.gle/LGSpB4NPXugy7LLE6" target="_blank" rel="noopener noreferrer">
                   フォームはこちら <FaExternalLinkAlt />
                 </a>
               );

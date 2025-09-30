@@ -448,7 +448,7 @@ const Home = () => {
           <EventDetails>
             <EventDetail>
               <EventIcon><FaCalendarAlt /></EventIcon>
-              <span>2025年11月26日(水) 10:00-19:00</span>
+              <span>2025年11月26日(水) 10:00-20:00</span>
             </EventDetail>
             <EventDetail>
               <EventIcon><FaMapMarkerAlt /></EventIcon>
@@ -819,7 +819,7 @@ const Home = () => {
               </IconWrapper>
               <InfoContent>
                 <InfoTitle>開催日時</InfoTitle>
-                <InfoText>2025年11月26日（水）10:00-19:00</InfoText>
+                <InfoText>2025年11月26日（水）10:00-20:00</InfoText>
               </InfoContent>
             </EventInfoItem>
             
