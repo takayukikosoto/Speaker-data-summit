@@ -146,7 +146,7 @@ const Downloads = () => {
   const categoryNames = {
     sponsor: 'ブース出展者向け資料',
     speaker: '登壇者向け資料',
-    branding: 'ブランド資料',
+    branding: 'プロモーションアセット・ブランド資料',
     press: 'プレス向け資料',
     general: '一般資料'
   };
