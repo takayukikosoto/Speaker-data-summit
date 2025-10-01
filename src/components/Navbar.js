@@ -11,11 +11,11 @@ const NavContainer = styled.nav`
   backdrop-filter: blur(5px);
   z-index: 1000;
   transition: all 0.3s ease;
-  padding: ${props => props.scrolled ? '0.8rem 2rem' : '1.5rem 2rem'};
-  box-shadow: ${props => props.scrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none'};
+  padding: ${props => props.$scrolled ? '0.8rem 2rem' : '1.5rem 2rem'};
+  box-shadow: ${props => props.$scrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none'};
   
   @media (max-width: 768px) {
-    padding: ${props => props.scrolled ? '0.8rem 1rem' : '1.2rem 1rem'};
+    padding: ${props => props.$scrolled ? '0.8rem 1rem' : '1.2rem 1rem'};
   }
 `;
 
@@ -28,7 +28,7 @@ const NavInner = styled.div`
 `;
 
 const Logo = styled(Link)`
-  font-size: ${props => props.scrolled ? '1.3rem' : '1.5rem'};
+  font-size: ${props => props.$scrolled ? '1.3rem' : '1.5rem'};
   font-weight: 700;
   color: #000;
   text-decoration: none;
@@ -49,8 +49,8 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   transition: opacity 0.3s ease;
-  opacity: ${props => props.isOpen ? 1 : 0};
-  visibility: ${props => props.isOpen ? 'visible' : 'hidden'};
+  opacity: ${props => props.$isOpen ? 1 : 0};
+  visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
 `;
 
 const NavLinks = styled.div`
@@ -71,7 +71,7 @@ const NavLinks = styled.div`
     gap: 1.5rem;
     z-index: 1001;
     overflow-y: auto;
-    transform: translateX(${props => props.isOpen ? '0' : '100%'});
+    transform: translateX(${props => props.$isOpen ? '0' : '100%'});
     transition: transform 0.3s ease-in-out;
   }
 `;
@@ -141,15 +141,15 @@ const MenuBar = styled.span`
   transition: all 0.3s ease;
   
   &:nth-child(1) {
-    transform: ${props => props.isOpen ? 'rotate(45deg) translate(5px, 6px)' : 'rotate(0)'};
+    transform: ${props => props.$isOpen ? 'rotate(45deg) translate(5px, 6px)' : 'rotate(0)'};
   }
   
   &:nth-child(2) {
-    opacity: ${props => props.isOpen ? '0' : '1'};
+    opacity: ${props => props.$isOpen ? '0' : '1'};
   }
   
   &:nth-child(3) {
-    transform: ${props => props.isOpen ? 'rotate(-45deg) translate(5px, -6px)' : 'rotate(0)'};
+    transform: ${props => props.$isOpen ? 'rotate(-45deg) translate(5px, -6px)' : 'rotate(0)'};
   }
 `;
 
@@ -233,13 +233,13 @@ const Navbar = () => {
   return (
     <>
       {/* オーバーレイ - メニュー開閉状態に応じて表示/非表示 */}
-      <Overlay isOpen={isOpen} onClick={closeMenu} />
+      <Overlay $isOpen={isOpen} onClick={closeMenu} />
       
       {/* ナビゲーションバー */}
-      <NavContainer scrolled={scrolled}>
+      <NavContainer $scrolled={scrolled}>
         <NavInner>
           {/* ロゴ */}
-          <Logo to="/" scrolled={scrolled}>
+          <Logo to="/" $scrolled={scrolled}>
             primeNumber DATA SUMMIT 2025
           </Logo>
           
@@ -249,13 +249,13 @@ const Navbar = () => {
             aria-label="Toggle menu"
             aria-expanded={isOpen}
           >
-            <MenuBar isOpen={isOpen} />
-            <MenuBar isOpen={isOpen} />
-            <MenuBar isOpen={isOpen} />
+            <MenuBar $isOpen={isOpen} />
+            <MenuBar $isOpen={isOpen} />
+            <MenuBar $isOpen={isOpen} />
           </MobileMenuButton>
           
           {/* ナビゲーションリンク */}
-          <NavLinks isOpen={isOpen}>
+          <NavLinks $isOpen={isOpen}>
             <NavLink to="/" onClick={closeMenu} className={location.pathname === '/' ? 'active' : ''}>ホーム</NavLink>
             <NavLink to="/#schedule" onClick={scrollToSchedule}>スケジュール</NavLink>
             {/* 開催概要のリンクは非表示のまま */}

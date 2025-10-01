@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import NetworkBackground from '../components/NetworkBackground';
+import GeometricBackground from '../components/GeometricBackground';
 import LogoSVG from '../logo/SVG/logo.svg';
 import { FaCalendarAlt, FaMapMarkerAlt, FaFileAlt, FaClipboardList, FaDownload, FaArrowRight, FaUsers, FaBuilding, FaEnvelope, FaGlobe, FaRegClock, FaRegCalendarAlt, FaUserTie, FaLink, FaTag, FaExternalLinkAlt } from 'react-icons/fa';
 
@@ -18,7 +19,6 @@ const HeroSection = styled.section`
   position: relative;
   padding: 0 2rem;
   overflow: hidden;
-  background-color: #0a7463;
   z-index: 0;
 `;
 
@@ -34,8 +34,9 @@ const HeroContent = styled.div`
 // EventStatusコンポーネントを削除
 
 const LogoContainer = styled.div`
+  margin-top: 50px; // Heroセクション上部からの余白
   margin-bottom: 5rem; // 間隔をさらに広げるために5remに変更
-  max-width: 600px;
+  max-width: 450px; // ロゴサイズを小さく（600px → 450px）
   width: 100%;
 `;
 
@@ -435,8 +436,7 @@ const Home = () => {
   return (
     <MainContainer>
       <HeroSection>
-        {/* NetworkBackgroundコンポーネントを一時的に非表示 */}
-        {/* <NetworkBackground /> */}
+        <GeometricBackground />
         <HeroContent>
           <LogoContainer>
             <Logo src={LogoSVG} alt="primeNumber DATA SUMMIT 2025" />
@@ -471,8 +471,8 @@ const Home = () => {
       <SectionContainer>
         <SectionTitle>primeNumber DATA SUMMIT 2025について</SectionTitle>
         <AboutText>
-          <h>こちらは「primeNumber DATA SUMMIT 2025」のスピーカー様専用ページです。</h>
-	<p>各種のファイルのダウンロードや申請が行えます。</p>
+          こちらは「primeNumber DATA SUMMIT 2025」のスピーカー様専用ページです。
+          各種のファイルのダウンロードや申請が行えます。
         </AboutText>
         
         <FeaturesGrid>
